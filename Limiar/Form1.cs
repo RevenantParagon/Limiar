@@ -88,6 +88,50 @@ namespace Limiar
             return R;
         }
 
+        public Imagem PassaAlta()
+        {
+            int[,] vs = new int[3, 3];
+            for (int a = 0; a < 3; a++)
+            {
+                for (int b = 0; b < 3; b++)
+                {
+                    if(a == 1 && b == 1)
+                    {
+                        vs.SetValue(8, a, b);
+                    }
+                    else
+                    {
+                        vs.SetValue(-1, a, b);
+                    }
+                    
+                }
+            }
+
+            Imagem R = new Imagem(imagem.Largura, imagem.Altura, TipoImagem.Monocromatica);
+            double soma;
+
+            for (int i = ((3 - 1) / 2); i < imagem.Altura - ((3 - 1) / 2); i++)
+            {
+                for (int j = ((3 - 1) / 2); j < imagem.Largura - ((3 - 1) / 2); j++)
+                {
+                    soma = 0;
+                    for (int a = -((3 - 1) / 2); a < ((3 + 1) / 2); a++)
+                    {
+                        for (int b = -((3 - 1) / 2); b < ((3 + 1) / 2); b++)
+                        {
+                            soma = soma + (imagem[i + a, j + b] * vs[a + ((3 - 1) / 2), b + ((3 - 1) / 2)]);
+                        }
+                    }
+                    if(soma < 0)
+                    {
+                        soma = 0;
+                    }
+                    R[i, j] = soma;
+                }
+            }
+            return R;
+        }
+
         private void Button2_Click(object sender, EventArgs e)
         {
             Imagem passa = PassaBaixa(11);
@@ -96,13 +140,57 @@ namespace Limiar
             {
                 for (int j = 0; j < passa.Largura; j++)
                 {
-                    if (passa[i, j] <= 206)
+                    if (passa[i, j] <= 120)
                     {
                         passa[i, j] = 0;
                     }
                     else
                     {
                         passa[i, j] = 255;
+                    }
+                }
+            }
+            pictureBox2.Image = passa.ToBitmap();
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            Imagem passa = PassaAlta();
+
+            for (int i = 0; i < passa.Altura; i++)
+            {
+                for (int j = 0; j < passa.Largura; j++)
+                {
+                    if (passa[i, j] <= 140)
+                    {
+                        passa[i, j] = 0;
+                    }
+                    else
+                    {
+                        passa[i, j] = 255;
+                    }
+                }
+            }
+            pictureBox2.Image = passa.ToBitmap();
+        }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            Imagem passa = PassaAlta();
+
+            for (int i = 0; i < passa.Altura; i++)
+            {
+                for (int j = 0; j < passa.Largura; j++)
+                {
+                    if (passa[i, j] <= 140)
+                    {
+                        passa[i, j] = 0;
+                        passa[i, j] = passa[i, j] + imagem[i, j];
+                    }
+                    else
+                    {
+                        passa[i, j] = 255;
+                        passa[i, j] = passa[i, j] + imagem[i, j];
                     }
                 }
             }
